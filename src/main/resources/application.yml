@@ -1,0 +1,48 @@
+--- # Server 세팅
+server:
+  port: 8080
+  servlet:
+    context-path: /blog
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+--- # Spring 세팅
+spring:
+  mustache: # mustache 사용시 @RestController를 사용하면 안됨.
+    expose-session-attributes: true # session에 있는 키 값 가져올 수 있음
+
+  # Data Source 세팅
+  datasource:
+    url: jdbc:postgresql://localhost:5432/blog
+    username: postgres
+    password: rnrdl486
+    driver-class-name: org.postgresql.Driver
+
+  # JPA 세팅
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    open-in-view: false # 디폴트 true 인데, 일반적으로 false가 맞음. transaction내에서만 영속성 상태유지 여부.
+    hibernate:
+      ddl-auto: create # create 최초 생성, update 개발 중(데이터 사라지지않음), none 개발완료
+
+#      naming: # naming 정책 변경도 가능하다는 걸 알려주기 위해 작성
+#        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy # 엔티티 클래스명, 변수명을 실제 DB의 컬럼,테이블명으로 변환하는 규칙.
+#        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy # 논리명을 실제 물리명으로 변환하는 규칙. ex) user -> usr
+
+     # Log 세팅에서 처리됨으로 주석처리
+#    show-sql: true # sysout 으로 출력하므로 운영에서는 false 로 해야함.(Log 세팅에서 처리됨으로 주석처리)
+#    properties:
+#      hibernate:
+#        format_sql: true # sysout에 한줄로 나오는 쿼리를 예쁘게 해줌.(show-sql: true 일때)
+#        use_sql_comments: true #   jpql 이 힌트로 같이 출력됨.
+  output:
+    ansi:
+      enabled: always # StackTrace에 색을 입혀 보기 좋게 바꿔주는 코드
+
+--- # Log 세팅
+logging:
+  level:
+    org.hibernate.SQL: debug                    # 쿼리가 debug 레벨에서 나옴.
+    org.hibernate.type.descriptor.sql: trace    # 쿼리안의 ? 에 대한 값 보기
